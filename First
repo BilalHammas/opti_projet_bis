@@ -1,0 +1,89 @@
+from random import randint,choice
+with open("data1.dat", "r") as f:
+# Lecture du fichier
+x = []
+N = int(f.readline())
+B = int(f.readline())
+E = int(f.readline())
+
+
+
+for line in f:
+x.extend(line.strip().split('\t'))
+
+
+
+x_bis = map(int, x)
+x_list=list(x_bis)
+
+
+
+print(N, B, E)
+print(x_list)
+All=x_list+[0 for j in range(B*E - N)]
+
+
+
+
+class Grasp():
+def __init__(self,All,alpha,nbr):
+self.input=All
+self.alpha=alpha
+self.nbr=nbr#nombre de cut posible
+self.cost=[]
+self.stop=False
+self.output=[]
+def Greedy(self,cut):
+temp=[]
+temp=list(self.input)
+n = int((1/cut)*self.input[0])
+print("##############################################")
+print(' on coupe ',self.input[0] )
+L=[n for j in range(cut-1)]
+L.append(self.input[0]-(cut-1)*n)
+print("en ",L)
+del temp[0]
+for j in range(cut-1):
+del temp[-1]
+temp=list(temp+ L)
+temp.sort(reverse=True)
+temp1=[temp[i:i +E] for i in range(0, len(temp), E)]
+print("##############################################")
+print("la nouvelle list est ",temp)
+print("Box ",temp1)
+print("##############################################")
+temp.sort(reverse=True)
+temp1=[temp[i:i +E] for i in range(0, len(temp), E)]
+return temp,temp1
+def Cost(self,cut):
+if self.input.count(0)<min(self.nbr):
+price=float('inf')
+self.stop=True
+else:
+temp,temp1=self.Greedy(cut)
+price=sum([el [0] for el in temp1])
+return price
+def partitionnement(self):
+
+
+
+self.cost=[(val, self.Cost(val)) for val in self.nbr]
+self.cost.sort(key=lambda x:x[1])
+self.cost=[el for el in self.cost if el[1]<float('inf')]
+print(" les couts sont " ,self.cost)
+choice2=self.cost[0][1]+self.alpha*(self.cost[-1][1]-self.cost[0][1])
+filtred=[el for el in self.cost if el[1]<choice2 ]
+element=choice(filtred)
+temp,temp1=self.Greedy(element[0])
+self.input=list(temp)
+print("l'input est devenu ",self.input)
+self.output=list(temp1)
+print("###################### ########################")
+print(" l'output deviens ",self.output)
+print("##################### #########################")
+
+def Run(self):
+for j in range(1):
+self.partitionnement()
+print("l'output est :",self.output)
+print(" le cout est de : ",sum([el [0] for el in self.output]))
